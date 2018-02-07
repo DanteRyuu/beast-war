@@ -25,7 +25,6 @@ public class MoveScript : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.W))
         {
             float facingDirection = characterController.transform.eulerAngles.y;
-            Debug.Log("W: " + facingDirection);
 
             Vector3 direction;
             switch ((int)facingDirection)
@@ -43,8 +42,7 @@ public class MoveScript : MonoBehaviour {
                     direction = new Vector3(moveSpeedX, 0, 0);
                     break;
             }
-
-            Debug.Log("dir: " + direction);
+            
             RaycastHit hit;
             if(!Physics.Raycast(characterController.transform.position, direction, out hit, Mathf.Abs(direction.x + direction.z)))
             {
@@ -52,15 +50,15 @@ public class MoveScript : MonoBehaviour {
             }
             else
             {
-                Debug.Log("Pos " + characterController.transform.position);
-                Debug.Log("Hit " + hit.transform.name);
-                Debug.DrawRay(characterController.transform.position, direction, Color.red, 5);
+                if(hit.transform.tag.Equals("enemy"))
+                {
+                    Debug.Log("enemy in range");
+                }
             }
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
             float facingDirection = characterController.transform.eulerAngles.y;
-            Debug.Log("S: " + facingDirection);
 
             Vector3 direction;
             switch ((int)facingDirection)
@@ -78,19 +76,14 @@ public class MoveScript : MonoBehaviour {
                     direction = new Vector3(-moveSpeedX, 0, 0);
                     break;
             }
-
-            Debug.Log("dir: " + direction);
+            
             RaycastHit hit;
             if (!Physics.Raycast(characterController.transform.position, direction, out hit, Mathf.Abs(direction.x + direction.z)))
             {
                 characterController.Move(direction);
             }
             else
-            {
-                Debug.Log("Pos " + characterController.transform.position);
-                Debug.Log("Hit " + hit.transform.name);
-                Debug.DrawRay(characterController.transform.position, direction, Color.red, 5);
-            }
+            {}
         }
 
         //camera rotation on Y axis
