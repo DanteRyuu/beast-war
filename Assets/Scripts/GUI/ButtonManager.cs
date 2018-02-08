@@ -28,12 +28,14 @@ public class ButtonManager : MonoBehaviour {
             GameManager.Get().ChangeAudioPanelStatus();
         }
         SceneManager.LoadScene("MainScene");
+        GameData.NewData();
         SoundManager.PlayVoice(GetComponentsInChildren<AudioSource>()[1]);
     }
 
     void onLoadGame()
     {
         SceneManager.LoadScene("MainScene");
+        GameData.LoadData();
     }
 
     void onOptionsButton()

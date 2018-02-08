@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour {
         ChangeAudioPanelStatus();
         canAttack = false;
         PlayerResources.Init();
+        GameData.Init();
     }
 
     void Update()

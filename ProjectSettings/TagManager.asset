@@ -8,6 +8,8 @@ TagManager:
   - wall
   - enemy
   - nearEnemy
+  - checkpoint
+  - exitDoor
   layers:
   - Default
   - TransparentFX

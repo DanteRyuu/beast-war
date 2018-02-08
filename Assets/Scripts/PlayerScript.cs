@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour {
 
@@ -12,16 +13,61 @@ public class PlayerScript : MonoBehaviour {
     public int maxDamage;
 
     private CharacterController characterController;
+    private static AsyncOperation loadingInfo;
+    public delegate void LoadChange(float value);
+    public static event LoadChange OnLoadChange;
+
+    private bool canSave = false;
+    private bool canTeleport = false;
 
     // Use this for initialization
     void Start () {
         characterController = GetComponent<CharacterController>();
+        GameData.OnDataInit(SetLocation);
     }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public void SetLocation()
+    {
+        Debug.Log("setting Location");
+        transform.position = new Vector3(GameData.Instance.locationX, transform.position.y, GameData.Instance.locationZ);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (canSave)
+            {
+                ShowMessagesScript script = GameObject.Find("GUI").GetComponentInChildren<ShowMessagesScript>();
+                string message = "Saving...";
+                script.SetText(message);
+
+                GameData.Instance.locationX = transform.position.x;
+                GameData.Instance.locationZ = transform.position.z;
+                GameData.SaveData();
+            }
+            else
+            {
+                ShowMessagesScript script = GameObject.Find("GUI").GetComponentInChildren<ShowMessagesScript>();
+                string message = "Cannot save unless you're next to a checkpoint";
+                script.SetText(message);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            if (canTeleport)
+            {
+                LoadSceneAsync(2);
+            }
+            else
+            {
+                ShowMessagesScript script = GameObject.Find("GUI").GetComponentInChildren<ShowMessagesScript>();
+                string message = "Cannot load scene unless you're next to the exit door";
+                script.SetText(message);
+            }
+        }
+    }
 
     private Vector3 GetDirection(float facingDirection, float forward)
     {
@@ -117,6 +163,20 @@ public class PlayerScript : MonoBehaviour {
         {
             GameManager.canAttack = true;
         }
+        if(other.transform.tag.Equals("checkpoint"))
+        {
+            canSave = true;
+            ShowMessagesScript script = GameObject.Find("GUI").GetComponentInChildren<ShowMessagesScript>();
+            string message = "Press E to save the game";
+            script.SetText(message);
+        }
+        if(other.transform.tag.Equals("exitDoor"))
+        {
+            canTeleport = true;
+            ShowMessagesScript script = GameObject.Find("GUI").GetComponentInChildren<ShowMessagesScript>();
+            string message = "Press L to load the next scene";
+            script.SetText(message);
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -125,5 +185,37 @@ public class PlayerScript : MonoBehaviour {
         {
             GameManager.canAttack = false;
         }
+        if (other.transform.tag.Equals("checkpoint"))
+        {
+            canSave = false;
+            ShowMessagesScript script = GameObject.Find("GUI").GetComponentInChildren<ShowMessagesScript>();
+            string message = "Checkpoint range left";
+            script.SetText(message);
+        }
+        if (other.transform.tag.Equals("exitDoor"))
+        {
+            canTeleport = false;
+            ShowMessagesScript script = GameObject.Find("GUI").GetComponentInChildren<ShowMessagesScript>();
+            string message = "Exit door range left";
+            script.SetText(message);
+        }
+    }
+
+    public static IEnumerator UpdateScene()
+    {
+        while (!loadingInfo.isDone)
+        {
+            Debug.Log(loadingInfo.progress);
+            OnLoadChange(loadingInfo.progress);
+            yield return new WaitForEndOfFrame();
+        }
+
+        OnLoadChange(loadingInfo.progress);
+    }
+
+    public static void LoadSceneAsync(int sceneIndex)
+    {
+        loadingInfo = SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Single);
+        GameManager.Get().StartCoroutine(UpdateScene());
     }
 }

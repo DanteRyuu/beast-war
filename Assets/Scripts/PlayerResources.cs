@@ -16,8 +16,9 @@ public class PlayerResources : MonoBehaviour {
 
     public static void Init()
     {
-        hitPoints = 100;
-        coins = 0;
+        //hitPoints = 100;
+        //coins = 0;
+        GameData.OnLoad += UpdateLoadedData;
     }
 
     public static void ReduceHealth(int health)
@@ -38,5 +39,11 @@ public class PlayerResources : MonoBehaviour {
         {
             OnCoinsChange();
         }
+    }
+
+    static void UpdateLoadedData()
+    {
+        hitPoints = GameData.Instance.playerHP;
+        coins = GameData.Instance.playerCoins;
     }
 }

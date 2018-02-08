@@ -9,7 +9,6 @@ public class EnemyScript : MonoBehaviour
     private int reward;
     private int damage;
     private bool canAttack;
-    private Transform player;
 
     // Use this for initialization
     void Start()
@@ -36,6 +35,10 @@ public class EnemyScript : MonoBehaviour
             canAttack = false;
             hitPoints = 0;
 
+            ShowMessagesScript script = GameObject.Find("GUI").GetComponentInChildren<ShowMessagesScript>();
+            string message = "You have killed " + transform.name + ".";
+            script.SetText(message);
+
             if (GetComponentInChildren<Animation>().isPlaying)
                 GetComponentInChildren<Animation>().Stop();
 
@@ -50,7 +53,7 @@ public class EnemyScript : MonoBehaviour
         yield return new WaitForSeconds(delay);
 
         ShowMessagesScript script = GameObject.Find("GUI").GetComponentInChildren<ShowMessagesScript>();
-        string message = "You have killed " + transform.name + ".";
+        string message = "You have received " + reward + " coins.";
         script.SetText(message);
 
         PlayerResources.CollectCoins(reward);
@@ -67,7 +70,6 @@ public class EnemyScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        player = other.transform;
         canAttack = true;
         GameManager.Get().StartCoroutine(AttackPlayer());
     }
@@ -78,7 +80,11 @@ public class EnemyScript : MonoBehaviour
         while (canAttack)
         {
             PlayerResources.ReduceHealth(damage);
-            if(PlayerResources.hitPoints == 0)
+            ShowMessagesScript script = GameObject.Find("GUI").GetComponentInChildren<ShowMessagesScript>();
+            string message = transform.name + " has hit you for " + damage.ToString() + " damage.";
+            script.SetText(message);
+
+            if (PlayerResources.hitPoints == 0)
             {
                 canAttack = false;
                 SceneManager.LoadScene("MenuScene");
