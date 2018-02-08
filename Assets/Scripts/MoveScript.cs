@@ -50,10 +50,10 @@ public class MoveScript : MonoBehaviour {
             }
             else
             {
-                if(hit.transform.tag.Equals("enemy"))
-                {
-                    Debug.Log("enemy in range");
-                }
+                //if(hit.transform.tag.Equals("enemy"))
+                //{
+                //    Debug.Log("enemy in range");
+                //}
             }
         }
         if (Input.GetKeyDown(KeyCode.S))
@@ -94,6 +94,22 @@ public class MoveScript : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.A))
         {
             characterController.transform.Rotate(0, -90, 0);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.transform.tag.Equals("enemy"))
+        {
+            GameManager.canAttack = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.transform.tag.Equals("enemy"))
+        {
+            GameManager.canAttack = false;
         }
     }
 }

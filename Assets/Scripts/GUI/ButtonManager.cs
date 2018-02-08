@@ -22,8 +22,13 @@ public class ButtonManager : MonoBehaviour {
 
         void onNewGame()
     {
-        SceneManager.LoadScene("MainScene");
         SoundManager.StopBackgroundMusic();
+        if(GameManager.Get().GetAudioPanelStatus())
+        {
+            GameManager.Get().ChangeAudioPanelStatus();
+        }
+        SceneManager.LoadScene("MainScene");
+        SoundManager.PlayVoice(GetComponentsInChildren<AudioSource>()[1]);
     }
 
     void onLoadGame()

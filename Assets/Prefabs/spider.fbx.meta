@@ -127,8 +127,14 @@ ModelImporter:
     7400006: attack
     7400008: die
     9500000: //RootNode
+    11100000: //RootNode
     13700000: mesh
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: spider_mat
+    second: {fileID: 2100000, guid: f73b6edfb0e1747debb82666f9db7597, type: 2}
   materials:
     importMaterials: 1
     materialName: 1
@@ -151,7 +157,7 @@ ModelImporter:
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
-    animationWrapMode: 0
+    animationWrapMode: 1
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations:
@@ -736,7 +742,7 @@ ModelImporter:
       takeName: die
       firstFrame: 151
       lastFrame: 165
-      wrapMode: 0
+      wrapMode: 1
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
@@ -922,7 +928,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 1
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 
     private static GameManager Instance;
+    public static bool canAttack;
 
     public static GameManager Get()
     {
@@ -25,13 +26,15 @@ public class GameManager : MonoBehaviour {
             Debug.Log("GameManager Instance: " + (Instance == this));
         }
 
-        SoundManager.PlayBackgroundMusic(GetComponentInChildren<AudioSource>());
+        SoundManager.PlayBackgroundMusic(GetComponentsInChildren<AudioSource>()[0]);
     }
 
     private void Init()
     {
         SoundManager.Init();
         ChangeAudioPanelStatus();
+        canAttack = false;
+        PlayerResources.Init();
     }
 
     void Update()
@@ -40,6 +43,11 @@ public class GameManager : MonoBehaviour {
         {
             ChangeAudioPanelStatus();
         }
+    }
+
+    public bool GetAudioPanelStatus()
+    {
+        return GetComponentInChildren<Canvas>().enabled;
     }
 
     public void ChangeAudioPanelStatus()
